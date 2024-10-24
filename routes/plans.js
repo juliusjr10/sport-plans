@@ -60,9 +60,9 @@ const db = mysql.createConnection({
  *                   type: string
  *                   example: "A comprehensive plan for beginners."
  *       400:
- *         description: All fields are required title, length, coach, description.
+ *         description: All fields are required
  *       422:
- *         description: Length must be a positive number.
+ *         description: Invalid input values
  */
 router.post('/', (req, res) => {
     const { title, length, coach, description } = req.body;
@@ -213,6 +213,10 @@ router.get('/:id', (req, res) => {
  *     responses:
  *       200:
  *         description: Plan updated successfully
+ *       400:
+ *         description: All fields are required
+ *       422:
+ *         description: Invalid input values
  *       404:
  *         description: Plan not found
  */
@@ -276,7 +280,7 @@ router.delete('/:id', (req, res) => {
  * @swagger
  * /plans/{plan_id}/workouts:
  *   get:
- *     summary: Retrieve all workouts for a specific training plan
+ *     summary: Retrieve all workouts for a specific plan
  *     tags: [Plans]
  *     parameters:
  *       - name: plan_id

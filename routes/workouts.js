@@ -110,9 +110,9 @@ router.get('/', (req, res) => {
  *                   type: integer
  *                   example: 3
  *       400:
- *         description: Invalid payload. All fields are required.
+ *         description: All fields are required
  *       422:
- *         description: Invalid payload. Length and frequency must be positive numbers.
+ *         description: Invalid input values
  */
 router.post('/', (req, res) => {
     const { name, length, type, frequency, plan_id } = req.body;
@@ -227,9 +227,9 @@ router.get('/:workout_id', (req, res) => {
  *       200:
  *         description: Workout updated successfully
  *       400:
- *         description: Invalid payload. All fields are required.
+ *         description: All fields are required
  *       422:
- *         description: Invalid payload. Length and frequency must be positive numbers.
+ *         description: Invalid input values
  *       404:
  *         description: Workout not found
  */
