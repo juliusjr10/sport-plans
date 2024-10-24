@@ -59,7 +59,7 @@ router.get('/:id', (req, res) => {
 // Update a plan
 router.put('/:id', (req, res) => {
     const { id } = req.params;
-    const { title, length, coach, description } = req.body;
+    const { title, length, coach, description} = req.body;
     const sql = 'UPDATE plans SET title = ?, length = ?, coach = ?, description = ? WHERE id = ?';
 
     db.query(sql, [title, length, coach, description, id], (err, result) => {

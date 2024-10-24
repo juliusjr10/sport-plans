@@ -11,11 +11,21 @@ const db = mysql.createConnection({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME
 });
+// Get all workouts
+router.get('/', (req, res) => {
+    const sql = 'SELECT * FROM workouts';
 
+    db.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching workouts:', err);
+            return res.status(500).send('Error fetching workouts');
+        }
+        res.json(results);
+    });
+});
 // Create a workout for a specific plan
 router.post('/', (req, res) => {
-    const { plan_id } = req.params;  // Now we get plan_id from the parent route
-    const { name, length, type, frequency } = req.body;
+    const { name, length, type, frequency, plan_id } = req.body;
     const sql = 'INSERT INTO workouts (plan_id, name, length, type, frequency) VALUES (?, ?, ?, ?, ?)';
     db.query(sql, [plan_id, name, length, type, frequency], (err, result) => {
         if (err) {
@@ -28,7 +38,7 @@ router.post('/', (req, res) => {
 
 // Get all workouts for a specific plan
 router.get('/workouts', (req, res) => {
-    const { plan_id } = req.params;
+    const { plan_id } = req.body;
     const sql = 'SELECT * FROM workouts WHERE plan_id = ?';
 
     db.query(sql, [plan_id], (err, results) => {
@@ -42,10 +52,10 @@ router.get('/workouts', (req, res) => {
 
 // Get a specific workout by ID
 router.get('/:workout_id', (req, res) => {
-    const { plan_id, workout_id } = req.params;
-    const sql = 'SELECT * FROM workouts WHERE id = ? AND plan_id = ?';
+    const {workout_id } = req.params;
+    const sql = 'SELECT * FROM workouts WHERE id = ?';
 
-    db.query(sql, [workout_id, plan_id], (err, results) => {
+    db.query(sql, [workout_id], (err, results) => {
         if (err) {
             console.error('Error fetching workout:', err);
             return res.status(500).send('Error fetching workout');
@@ -59,11 +69,11 @@ router.get('/:workout_id', (req, res) => {
 
 // Update a workout for a specific plan
 router.put('/:workout_id', (req, res) => {
-    const { plan_id, workout_id } = req.params;
-    const { name, length, type, frequency } = req.body;
-    const sql = 'UPDATE workouts SET name = ?, length = ?, type = ?, frequency = ? WHERE id = ? AND plan_id = ?';
+    const {workout_id } = req.params;
+    const { name, length, type, frequency} = req.body;
+    const sql = 'UPDATE workouts SET name = ?, length = ?, type = ?, frequency = ? WHERE id = ?';
 
-    db.query(sql, [name, length, type, frequency, workout_id, plan_id], (err, result) => {
+    db.query(sql, [name, length, type, frequency, workout_id], (err, result) => {
         if (err) {
             console.error('Error updating workout:', err);
             return res.status(500).send('Error updating workout');
@@ -77,10 +87,10 @@ router.put('/:workout_id', (req, res) => {
 
 // Delete a workout for a specific plan
 router.delete('/:workout_id', (req, res) => {
-    const { plan_id, workout_id } = req.params;
-    const sql = 'DELETE FROM workouts WHERE id = ? AND plan_id = ?';
+    const {workout_id } = req.params;
+    const sql = 'DELETE FROM workouts WHERE id = ?';
 
-    db.query(sql, [workout_id, plan_id], (err, result) => {
+    db.query(sql, [workout_id], (err, result) => {
         if (err) {
             console.error('Error deleting workout:', err);
             return res.status(500).send('Error deleting workout');

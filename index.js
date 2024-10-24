@@ -35,8 +35,8 @@ const exercisesRoutes = require('./routes/exercises');
 
 // Use the imported routes
 app.use('/plans', plansRoutes);
-app.use('/plans/:plan_id/', workoutsRoutes); // handles `/plans/:plan_id/workouts`
-app.use('/plans/:plan_id/:workout_id', exercisesRoutes); // handles `/plans/:plan_id/workouts`
+app.use('/workouts', workoutsRoutes);
+app.use('/exercises', exercisesRoutes); 
 // Basic route for testing
 app.get('/', (req, res) => {
     res.send('Hello World!');

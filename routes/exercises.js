@@ -14,8 +14,18 @@ const db = mysql.createConnection({
 
 // Create a new exercise
 router.post('/', (req, res) => {
-    const { workout_id } = req.params;
-    const { name, sets, reps, restTime, tips } = req.body;
+    const { name, sets, reps, restTime, tips, workout_id } = req.body;
+
+    // Check for missing fields
+    if (!name || sets === undefined || reps === undefined || restTime === undefined || !workout_id) {
+        return res.status(400).json({ error: 'All fields are required: name, sets, reps, restTime, tips, workout_id.' });
+    }
+
+    // Additional validation
+    if (sets <= 0 || reps <= 0 || restTime < 0) {
+        return res.status(422).json({ error: 'Sets and reps must be positive numbers, and rest time must be zero or a positive number.' });
+    }
+
     const sql = 'INSERT INTO exercises (name, sets, reps, restTime, tips, workout_id) VALUES (?, ?, ?, ?, ?, ?)';
     db.query(sql, [name, sets, reps, restTime, tips, workout_id], (err, result) => {
         if (err) {
@@ -26,12 +36,12 @@ router.post('/', (req, res) => {
     });
 });
 
-// Get all exercises for a specific workout
-router.get('/exercises', (req, res) => {
-    const { workout_id } = req.params;
-    const sql = 'SELECT * FROM exercises WHERE workout_id = ?';
 
-    db.query(sql, [workout_id], (err, results) => {
+// Get all exercises for a specific workout
+router.get('/', (req, res) => {
+    const sql = 'SELECT * FROM exercises';
+
+    db.query(sql, (err, results) => {
         if (err) {
             console.error('Error fetching exercises:', err);
             return res.status(500).send('Error fetching exercises');
@@ -42,10 +52,10 @@ router.get('/exercises', (req, res) => {
 
 // Get a specific exercise by ID
 router.get('/:exercise_id', (req, res) => {
-    const { workout_id, exercise_id } = req.params;
-    const sql = 'SELECT * FROM exercises WHERE id = ? AND workout_id = ?';
+    const {exercise_id } = req.params;
+    const sql = 'SELECT * FROM exercises WHERE id = ?';
 
-    db.query(sql, [exercise_id, workout_id], (err, results) => {
+    db.query(sql, [exercise_id], (err, results) => {
         if (err) {
             console.error('Error fetching exercise:', err);
             return res.status(500).send('Error fetching exercise');
@@ -59,11 +69,11 @@ router.get('/:exercise_id', (req, res) => {
 
 // Update an exercise for a specific workout
 router.put('/:exercise_id', (req, res) => {
-    const { workout_id, exercise_id } = req.params;
+    const { exercise_id } = req.params;
     const { name, sets, reps, restTime, tips } = req.body;
-    const sql = 'UPDATE exercises SET name = ?, sets = ?, reps = ?, restTime = ?, tips = ? WHERE id = ? AND workout_id = ?';
+    const sql = 'UPDATE exercises SET name = ?, sets = ?, reps = ?, restTime = ?, tips = ? WHERE id = ?';
 
-    db.query(sql, [name, sets, reps, restTime, tips, exercise_id, workout_id], (err, result) => {
+    db.query(sql, [name, sets, reps, restTime, tips, exercise_id], (err, result) => {
         if (err) {
             console.error('Error updating exercise:', err);
             return res.status(500).send('Error updating exercise');
@@ -77,10 +87,10 @@ router.put('/:exercise_id', (req, res) => {
 
 // Delete an exercise for a specific workout
 router.delete('/:exercise_id', (req, res) => {
-    const { workout_id, exercise_id } = req.params;
-    const sql = 'DELETE FROM exercises WHERE id = ? AND workout_id = ?';
+    const { exercise_id } = req.params;
+    const sql = 'DELETE FROM exercises WHERE id = ?';
 
-    db.query(sql, [exercise_id, workout_id], (err, result) => {
+    db.query(sql, [exercise_id], (err, result) => {
         if (err) {
             console.error('Error deleting exercise:', err);
             return res.status(500).send('Error deleting exercise');
