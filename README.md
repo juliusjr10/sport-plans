@@ -29,3 +29,278 @@ PASIRINKTOS TECHNOLOGIJOS:
 Frontend: React.js
 
 Backend: Express.js
+
+# API Documentation
+API documentation for plans, workouts, and exercises.
+
+## Version: 1.0.0
+
+### /exercises
+
+#### POST
+##### Summary:
+
+Create a new exercise
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 201 | Exercise created successfully |
+| 400 | All fields are required |
+| 422 | Invalid input values |
+
+#### GET
+##### Summary:
+
+Get all exercises
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | A list of exercises |
+
+### /exercises/{exercise_id}
+
+#### GET
+##### Summary:
+
+Get a specific exercise
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| exercise_id | path | ID of the exercise | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Exercise found |
+| 404 | Exercise not found |
+
+#### PUT
+##### Summary:
+
+Update an exercise
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| exercise_id | path | ID of the exercise | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Exercise updated successfully |
+| 400 | All fields are required |
+| 404 | Exercise not found |
+| 422 | Invalid input values |
+
+#### DELETE
+##### Summary:
+
+Delete an exercise
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| exercise_id | path | ID of the exercise | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Exercise deleted successfully |
+| 404 | Exercise not found |
+
+### /plans
+
+#### POST
+##### Summary:
+
+Create a new training plan
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 201 | Plan created successfully |
+| 400 | All fields are required title, length, coach, description. |
+| 422 | Length must be a positive number. |
+
+#### GET
+##### Summary:
+
+Retrieve a list of training plans
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | A list of training plans |
+
+### /plans/{id}
+
+#### GET
+##### Summary:
+
+Retrieve a specific training plan by ID
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| id | path | ID of the training plan | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | A training plan found |
+| 404 | Plan not found |
+
+#### PUT
+##### Summary:
+
+Update a specific training plan
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| id | path | ID of the training plan | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Plan updated successfully |
+| 404 | Plan not found |
+
+#### DELETE
+##### Summary:
+
+Delete a specific training plan
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| id | path | ID of the training plan | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Plan deleted successfully |
+| 404 | Plan not found |
+
+### /plans/{plan_id}/workouts
+
+#### GET
+##### Summary:
+
+Retrieve all workouts for a specific training plan
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| plan_id | path | ID of the training plan | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | A list of workouts for the specified plan |
+| 404 | Plan not found |
+
+### /workouts
+
+#### GET
+##### Summary:
+
+Retrieve a list of all workouts
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | A list of workouts |
+
+#### POST
+##### Summary:
+
+Create a new workout for a specific training plan
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 201 | Workout created successfully |
+| 400 | Invalid payload. All fields are required. |
+| 422 | Invalid payload. Length and frequency must be positive numbers. |
+
+### /workouts/{workout_id}
+
+#### GET
+##### Summary:
+
+Retrieve a specific workout by ID
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| workout_id | path | ID of the workout | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | A workout found |
+| 404 | Workout not found |
+
+#### PUT
+##### Summary:
+
+Update a specific workout
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| workout_id | path | ID of the workout | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Workout updated successfully |
+| 400 | Invalid payload. All fields are required. |
+| 404 | Workout not found |
+| 422 | Invalid payload. Length and frequency must be positive numbers. |
+
+#### DELETE
+##### Summary:
+
+Delete a specific workout
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| workout_id | path | ID of the workout | Yes | integer |
+
+##### Responses
+
+| Code | Description |
+| ---- | ----------- |
+| 200 | Workout deleted successfully |
+| 404 | Workout not found |

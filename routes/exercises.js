@@ -1,10 +1,8 @@
 const express = require('express');
 const mysql = require('mysql2');
 
-// Create a router
 const router = express.Router({ mergeParams: true });  // Ensure workout_id is passed
 
-// MySQL connection (Make sure to update the connection with your config)
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -13,6 +11,71 @@ const db = mysql.createConnection({
 });
 
 // Create a new exercise
+/**
+ * @swagger
+ * /exercises:
+ *   post:
+ *     summary: Create a new exercise
+ *     tags: [Exercises]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Push Up"
+ *               sets:
+ *                 type: integer
+ *                 example: 3
+ *               reps:
+ *                 type: integer
+ *                 example: 15
+ *               restTime:
+ *                 type: integer
+ *                 example: 60
+ *               tips:
+ *                 type: string
+ *                 example: "Keep your back straight."
+ *               workout_id:
+ *                 type: integer
+ *                 example: 1
+ *     responses:
+ *       201:
+ *         description: Exercise created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "Push Up"
+ *                 sets:
+ *                   type: integer
+ *                   example: 3
+ *                 reps:
+ *                   type: integer
+ *                   example: 15
+ *                 restTime:
+ *                   type: integer
+ *                   example: 60
+ *                 tips:
+ *                   type: string
+ *                   example: "Keep your back straight."
+ *                 workout_id:
+ *                   type: integer
+ *                   example: 1
+ *       400:
+ *         description: All fields are required
+ *       422:
+ *         description: Invalid input values
+ */
 router.post('/', (req, res) => {
     const { name, sets, reps, restTime, tips, workout_id } = req.body;
 
@@ -22,44 +85,114 @@ router.post('/', (req, res) => {
     }
 
     // Additional validation
-    if (sets <= 0 || reps <= 0 || restTime < 0) {
-        return res.status(422).json({ error: 'Sets and reps must be positive numbers, and rest time must be zero or a positive number.' });
+    if (isNaN(sets) || sets <= 0 || isNaN(reps) || reps <= 0 || isNaN(restTime) || restTime < 0 || isNaN(workout_id)) {
+        return res.status(422).json({ error: 'Sets and reps must be positive numbers, rest time must be zero or a positive number, and workout_id must be a valid number.' });
     }
 
     const sql = 'INSERT INTO exercises (name, sets, reps, restTime, tips, workout_id) VALUES (?, ?, ?, ?, ?, ?)';
     db.query(sql, [name, sets, reps, restTime, tips, workout_id], (err, result) => {
-        if (err) {
-            console.error('Error inserting exercise:', err);
-            return res.status(500).send('Error inserting exercise');
-        }
         res.status(201).json({ id: result.insertId, name, sets, reps, restTime, tips, workout_id });
     });
 });
 
-
 // Get all exercises for a specific workout
+/**
+ * @swagger
+ * /exercises:
+ *   get:
+ *     summary: Get all exercises
+ *     tags: [Exercises]
+ *     responses:
+ *       200:
+ *         description: A list of exercises
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: "Push Up"
+ *                   sets:
+ *                     type: integer
+ *                     example: 3
+ *                   reps:
+ *                     type: integer
+ *                     example: 15
+ *                   restTime:
+ *                     type: integer
+ *                     example: 60
+ *                   tips:
+ *                     type: string
+ *                     example: "Keep your back straight."
+ *                   workout_id:
+ *                     type: integer
+ *                     example: 1
+ */
 router.get('/', (req, res) => {
     const sql = 'SELECT * FROM exercises';
 
     db.query(sql, (err, results) => {
-        if (err) {
-            console.error('Error fetching exercises:', err);
-            return res.status(500).send('Error fetching exercises');
-        }
         res.json(results);
     });
 });
 
 // Get a specific exercise by ID
+/**
+ * @swagger
+ * /exercises/{exercise_id}:
+ *   get:
+ *     summary: Get a specific exercise
+ *     tags: [Exercises]
+ *     parameters:
+ *       - name: exercise_id
+ *         in: path
+ *         required: true
+ *         description: ID of the exercise
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Exercise found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 id:
+ *                   type: integer
+ *                   example: 1
+ *                 name:
+ *                   type: string
+ *                   example: "Push Up"
+ *                 sets:
+ *                   type: integer
+ *                   example: 3
+ *                 reps:
+ *                   type: integer
+ *                   example: 15
+ *                 restTime:
+ *                   type: integer
+ *                   example: 60
+ *                 tips:
+ *                   type: string
+ *                   example: "Keep your back straight."
+ *                 workout_id:
+ *                   type: integer
+ *                   example: 1
+ *       404:
+ *         description: Exercise not found
+ */
 router.get('/:exercise_id', (req, res) => {
-    const {exercise_id } = req.params;
+    const { exercise_id } = req.params;
     const sql = 'SELECT * FROM exercises WHERE id = ?';
 
     db.query(sql, [exercise_id], (err, results) => {
-        if (err) {
-            console.error('Error fetching exercise:', err);
-            return res.status(500).send('Error fetching exercise');
-        }
         if (results.length === 0) {
             return res.status(404).send('Exercise not found');
         }
@@ -68,16 +201,68 @@ router.get('/:exercise_id', (req, res) => {
 });
 
 // Update an exercise for a specific workout
+/**
+ * @swagger
+ * /exercises/{exercise_id}:
+ *   put:
+ *     summary: Update an exercise
+ *     tags: [Exercises]
+ *     parameters:
+ *       - name: exercise_id
+ *         in: path
+ *         required: true
+ *         description: ID of the exercise
+ *         schema:
+ *           type: integer
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: "Push Up"
+ *               sets:
+ *                 type: integer
+ *                 example: 3
+ *               reps:
+ *                 type: integer
+ *                 example: 15
+ *               restTime:
+ *                 type: integer
+ *                 example: 60
+ *               tips:
+ *                 type: string
+ *                 example: "Keep your back straight."
+ *     responses:
+ *       200:
+ *         description: Exercise updated successfully
+ *       400:
+ *         description: All fields are required
+ *       404:
+ *         description: Exercise not found
+ *       422:
+ *         description: Invalid input values
+ */
 router.put('/:exercise_id', (req, res) => {
     const { exercise_id } = req.params;
     const { name, sets, reps, restTime, tips } = req.body;
-    const sql = 'UPDATE exercises SET name = ?, sets = ?, reps = ?, restTime = ?, tips = ? WHERE id = ?';
 
+    // Check for missing fields
+    if (!name || sets === undefined || reps === undefined || restTime === undefined) {
+        return res.status(400).json({ error: 'All fields are required: name, sets, reps, restTime, and tips.' });
+    }
+
+    // Additional validation
+    if (isNaN(sets) || sets <= 0 || isNaN(reps) || reps <= 0 || isNaN(restTime) || restTime < 0) {
+        return res.status(422).json({ error: 'Sets and reps must be positive numbers, and rest time must be zero or a positive number.' });
+    }
+
+    const sql = 'UPDATE exercises SET name = ?, sets = ?, reps = ?, restTime = ?, tips = ? WHERE id = ?';
+    
     db.query(sql, [name, sets, reps, restTime, tips, exercise_id], (err, result) => {
-        if (err) {
-            console.error('Error updating exercise:', err);
-            return res.status(500).send('Error updating exercise');
-        }
         if (result.affectedRows === 0) {
             return res.status(404).send('Exercise not found');
         }
@@ -86,15 +271,30 @@ router.put('/:exercise_id', (req, res) => {
 });
 
 // Delete an exercise for a specific workout
+/**
+ * @swagger
+ * /exercises/{exercise_id}:
+ *   delete:
+ *     summary: Delete an exercise
+ *     tags: [Exercises]
+ *     parameters:
+ *       - name: exercise_id
+ *         in: path
+ *         required: true
+ *         description: ID of the exercise
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: Exercise deleted successfully
+ *       404:
+ *         description: Exercise not found
+ */
 router.delete('/:exercise_id', (req, res) => {
     const { exercise_id } = req.params;
     const sql = 'DELETE FROM exercises WHERE id = ?';
 
     db.query(sql, [exercise_id], (err, result) => {
-        if (err) {
-            console.error('Error deleting exercise:', err);
-            return res.status(500).send('Error deleting exercise');
-        }
         if (result.affectedRows === 0) {
             return res.status(404).send('Exercise not found');
         }
