@@ -131,8 +131,8 @@ Create a new training plan
 | Code | Description |
 | ---- | ----------- |
 | 201 | Plan created successfully |
-| 400 | All fields are required title, length, coach, description. |
-| 422 | Length must be a positive number. |
+| 400 | All fields are required |
+| 422 | Invalid input values |
 
 #### GET
 ##### Summary:
@@ -181,7 +181,9 @@ Update a specific training plan
 | Code | Description |
 | ---- | ----------- |
 | 200 | Plan updated successfully |
+| 400 | All fields are required |
 | 404 | Plan not found |
+| 422 | Invalid input values |
 
 #### DELETE
 ##### Summary:
@@ -206,7 +208,7 @@ Delete a specific training plan
 #### GET
 ##### Summary:
 
-Retrieve all workouts for a specific training plan
+Retrieve all workouts for a specific plan
 
 ##### Parameters
 
@@ -244,8 +246,8 @@ Create a new workout for a specific training plan
 | Code | Description |
 | ---- | ----------- |
 | 201 | Workout created successfully |
-| 400 | Invalid payload. All fields are required. |
-| 422 | Invalid payload. Length and frequency must be positive numbers. |
+| 400 | All fields are required |
+| 422 | Invalid input values |
 
 ### /workouts/{workout_id}
 
@@ -283,9 +285,9 @@ Update a specific workout
 | Code | Description |
 | ---- | ----------- |
 | 200 | Workout updated successfully |
-| 400 | Invalid payload. All fields are required. |
+| 400 | All fields are required |
 | 404 | Workout not found |
-| 422 | Invalid payload. Length and frequency must be positive numbers. |
+| 422 | Invalid input values |
 
 #### DELETE
 ##### Summary:

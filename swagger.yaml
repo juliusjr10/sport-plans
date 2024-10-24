@@ -39,7 +39,7 @@ paths:
             summary: 'Create a new training plan'
             tags: [Plans]
             requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {title: {type: string, example: 'Beginner Workout Plan'}, length: {type: integer, example: 30}, coach: {type: string, example: 'John Doe'}, description: {type: string, example: 'A comprehensive plan for beginners.'}}}}}}
-            responses: {'201': {description: 'Plan created successfully', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, title: {type: string, example: 'Beginner Workout Plan'}, length: {type: integer, example: 30}, coach: {type: string, example: 'John Doe'}, description: {type: string, example: 'A comprehensive plan for beginners.'}}}}}}, '400': {description: 'All fields are required title, length, coach, description.'}, '422': {description: 'Length must be a positive number.'}}
+            responses: {'201': {description: 'Plan created successfully', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, title: {type: string, example: 'Beginner Workout Plan'}, length: {type: integer, example: 30}, coach: {type: string, example: 'John Doe'}, description: {type: string, example: 'A comprehensive plan for beginners.'}}}}}}, '400': {description: 'All fields are required'}, '422': {description: 'Invalid input values'}}
         get:
             summary: 'Retrieve a list of training plans'
             tags: [Plans]
@@ -55,7 +55,7 @@ paths:
             tags: [Plans]
             parameters: [{name: id, in: path, required: true, description: 'ID of the training plan', schema: {type: integer}}]
             requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {title: {type: string, example: 'Beginner Workout Plan'}, length: {type: integer, example: 30}, coach: {type: string, example: 'John Doe'}, description: {type: string, example: 'A comprehensive plan for beginners.'}}}}}}
-            responses: {'200': {description: 'Plan updated successfully'}, '404': {description: 'Plan not found'}}
+            responses: {'200': {description: 'Plan updated successfully'}, '400': {description: 'All fields are required'}, '404': {description: 'Plan not found'}, '422': {description: 'Invalid input values'}}
         delete:
             summary: 'Delete a specific training plan'
             tags: [Plans]
@@ -63,7 +63,7 @@ paths:
             responses: {'200': {description: 'Plan deleted successfully'}, '404': {description: 'Plan not found'}}
     '/plans/{plan_id}/workouts':
         get:
-            summary: 'Retrieve all workouts for a specific training plan'
+            summary: 'Retrieve all workouts for a specific plan'
             tags: [Plans]
             parameters: [{name: plan_id, in: path, required: true, description: 'ID of the training plan', schema: {type: integer}}]
             responses: {'200': {description: 'A list of workouts for the specified plan', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}}, '404': {description: 'Plan not found'}}
@@ -76,7 +76,7 @@ paths:
             summary: 'Create a new workout for a specific training plan'
             tags: [Workouts]
             requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}, plan_id: {type: integer, example: 1}}}}}}
-            responses: {'201': {description: 'Workout created successfully', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}, '400': {description: 'Invalid payload. All fields are required.'}, '422': {description: 'Invalid payload. Length and frequency must be positive numbers.'}}
+            responses: {'201': {description: 'Workout created successfully', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}, '400': {description: 'All fields are required'}, '422': {description: 'Invalid input values'}}
     '/workouts/{workout_id}':
         get:
             summary: 'Retrieve a specific workout by ID'
@@ -88,7 +88,7 @@ paths:
             tags: [Workouts]
             parameters: [{name: workout_id, in: path, required: true, description: 'ID of the workout', schema: {type: integer}}]
             requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}
-            responses: {'200': {description: 'Workout updated successfully'}, '400': {description: 'Invalid payload. All fields are required.'}, '404': {description: 'Workout not found'}, '422': {description: 'Invalid payload. Length and frequency must be positive numbers.'}}
+            responses: {'200': {description: 'Workout updated successfully'}, '400': {description: 'All fields are required'}, '404': {description: 'Workout not found'}, '422': {description: 'Invalid input values'}}
         delete:
             summary: 'Delete a specific workout'
             tags: [Workouts]
