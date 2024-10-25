@@ -1,7 +1,7 @@
 const express = require('express');
 const mysql = require('mysql2');
 
-const router = express.Router({ mergeParams: true });  // Ensure workout_id is passed
+const router = express.Router();
 
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -95,7 +95,6 @@ router.post('/', (req, res) => {
     });
 });
 
-// Get all exercises for a specific workout
 /**
  * @swagger
  * /exercises:
@@ -133,14 +132,24 @@ router.post('/', (req, res) => {
  *                   workout_id:
  *                     type: integer
  *                     example: 1
+ *       500:
+ *         description: Internal server error
  */
 router.get('/', (req, res) => {
     const sql = 'SELECT * FROM exercises';
 
     db.query(sql, (err, results) => {
-        res.json(results);
+        if (err) {
+            // Handle database error and send a response
+            console.error('Database error:', err);
+            return res.status(500).json({ error: 'Failed to fetch exercises' });
+        }
+
+        // If no error, send the results
+        res.status(200).json(results);
     });
 });
+
 
 // Get a specific exercise by ID
 /**

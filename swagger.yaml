@@ -5,7 +5,7 @@ info:
     description: 'API documentation for plans, workouts, and exercises.'
 servers:
     -
-        url: 'http://localhost:3012'
+        url: 'http://localhost:3010'
 paths:
     /exercises:
         post:
@@ -16,7 +16,7 @@ paths:
         get:
             summary: 'Get all exercises'
             tags: [Exercises]
-            responses: {'200': {description: 'A list of exercises', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, name: {type: string, example: 'Push Up'}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}, restTime: {type: integer, example: 60}, tips: {type: string, example: 'Keep your back straight.'}, workout_id: {type: integer, example: 1}}}}}}}}
+            responses: {'200': {description: 'A list of exercises', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, name: {type: string, example: 'Push Up'}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}, restTime: {type: integer, example: 60}, tips: {type: string, example: 'Keep your back straight.'}, workout_id: {type: integer, example: 1}}}}}}}, '500': {description: 'Internal server error'}}
     '/exercises/{exercise_id}':
         get:
             summary: 'Get a specific exercise'

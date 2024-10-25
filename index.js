@@ -8,7 +8,7 @@ const fs = require('fs'); // Import fs for file operations
 
 // Create an Express application
 const app = express();
-const port = 3012;
+const port = 3010;
 
 app.use(express.json());
 require('dotenv').config();
