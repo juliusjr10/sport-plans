@@ -74,11 +74,12 @@ generateSwaggerYaml();
 const plansRoutes = require('./routes/plans'); 
 const workoutsRoutes = require('./routes/workouts');  
 const exercisesRoutes = require('./routes/exercises');
-
+const usersRoutes = require('./routes/users');
 // Use routes
 app.use('/plans', plansRoutes);
 app.use('/workouts', workoutsRoutes);
 app.use('/exercises', exercisesRoutes);
+app.use('/users', usersRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello World!');

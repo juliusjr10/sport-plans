@@ -12,38 +12,38 @@ paths:
             summary: 'Create a new exercise'
             tags: [Exercises]
             requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {name: {type: string, example: 'Push Up'}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}, restTime: {type: integer, example: 60}, tips: {type: string, example: 'Keep your back straight.'}, workout_id: {type: integer, example: 1}}}}}}
-            responses: {'201': {description: 'Exercise created successfully', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, name: {type: string, example: 'Push Up'}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}, restTime: {type: integer, example: 60}, tips: {type: string, example: 'Keep your back straight.'}, workout_id: {type: integer, example: 1}}}}}}, '400': {description: 'All fields are required'}, '422': {description: 'Invalid input values'}}
+            responses: {'201': {description: 'Exercise created successfully', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, name: {type: string, example: 'Push Up'}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}, restTime: {type: integer, example: 60}, tips: {type: string, example: 'Keep your back straight.'}, workout_id: {type: integer, example: 1}}}}}}, '400': {description: 'All fields are required'}, '403': {description: 'Access denied. You do not have permission to create this exercise.'}, '422': {description: 'Invalid input values'}}
         get:
             summary: 'Get all exercises'
             tags: [Exercises]
-            responses: {'200': {description: 'A list of exercises', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, name: {type: string, example: 'Push Up'}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}, restTime: {type: integer, example: 60}, tips: {type: string, example: 'Keep your back straight.'}, workout_id: {type: integer, example: 1}}}}}}}, '500': {description: 'Internal server error'}}
+            responses: {'200': {description: 'A list of exercises', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, name: {type: string, example: 'Push Up'}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}, restTime: {type: integer, example: 60}, tips: {type: string, example: 'Keep your back straight.'}, workout_id: {type: integer, example: 1}}}}}}}, '403': {description: 'Access denied. You do not have the required permissions.'}, '500': {description: 'Internal server error'}}
     '/exercises/{exercise_id}':
         get:
             summary: 'Get a specific exercise'
             tags: [Exercises]
             parameters: [{name: exercise_id, in: path, required: true, description: 'ID of the exercise', schema: {type: integer}}]
-            responses: {'200': {description: 'Exercise found', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, name: {type: string, example: 'Push Up'}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}, restTime: {type: integer, example: 60}, tips: {type: string, example: 'Keep your back straight.'}, workout_id: {type: integer, example: 1}}}}}}, '404': {description: 'Exercise not found'}}
+            responses: {'200': {description: 'Exercise found', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, name: {type: string, example: 'Push Up'}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}, restTime: {type: integer, example: 60}, tips: {type: string, example: 'Keep your back straight.'}, workout_id: {type: integer, example: 1}}}}}}, '403': {description: 'Access denied. You do not have the required permissions.'}, '404': {description: 'Exercise not found'}}
         put:
             summary: 'Update an exercise'
             tags: [Exercises]
             parameters: [{name: exercise_id, in: path, required: true, description: 'ID of the exercise', schema: {type: integer}}]
             requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {name: {type: string, example: 'Push Up'}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}, restTime: {type: integer, example: 60}, tips: {type: string, example: 'Keep your back straight.'}}}}}}
-            responses: {'200': {description: 'Exercise updated successfully'}, '400': {description: 'All fields are required'}, '404': {description: 'Exercise not found'}, '422': {description: 'Invalid input values'}}
+            responses: {'200': {description: 'Exercise updated successfully'}, '400': {description: 'All fields are required'}, '403': {description: 'Access denied. You are not the owner of the plan or an admin.'}, '404': {description: 'Exercise not found'}, '422': {description: 'Invalid input values'}}
         delete:
             summary: 'Delete an exercise'
             tags: [Exercises]
             parameters: [{name: exercise_id, in: path, required: true, description: 'ID of the exercise', schema: {type: integer}}]
-            responses: {'200': {description: 'Exercise deleted successfully'}, '404': {description: 'Exercise not found'}}
+            responses: {'200': {description: 'Exercise deleted successfully'}, '403': {description: 'Access denied. You are not the owner of the plan or an admin.'}, '404': {description: 'Exercise not found'}}
     /plans:
         post:
             summary: 'Create a new training plan'
             tags: [Plans]
             requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {title: {type: string, example: 'Beginner Workout Plan'}, length: {type: integer, example: 30}, coach: {type: string, example: 'John Doe'}, description: {type: string, example: 'A comprehensive plan for beginners.'}}}}}}
-            responses: {'201': {description: 'Plan created successfully', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, title: {type: string, example: 'Beginner Workout Plan'}, length: {type: integer, example: 30}, coach: {type: string, example: 'John Doe'}, description: {type: string, example: 'A comprehensive plan for beginners.'}}}}}}, '400': {description: 'All fields are required'}, '422': {description: 'Invalid input values'}}
+            responses: {'201': {description: 'Plan created successfully', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, title: {type: string, example: 'Beginner Workout Plan'}, length: {type: integer, example: 30}, coach: {type: string, example: 'John Doe'}, description: {type: string, example: 'A comprehensive plan for beginners.'}}}}}}, '400': {description: 'Missing or invalid fields'}, '403': {description: 'Forbidden, if the user does not have a valid role to create the plan'}, '500': {description: 'Server error'}}
         get:
             summary: 'Retrieve a list of training plans'
             tags: [Plans]
-            responses: {'200': {description: 'A list of training plans', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, title: {type: string, example: 'Beginner Workout Plan'}, length: {type: integer, example: 30}, coach: {type: string, example: 'John Doe'}, description: {type: string, example: 'A comprehensive plan for beginners.'}}}}}}}}
+            responses: {'200': {description: 'A list of training plans', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, title: {type: string, example: 'Beginner Workout Plan'}, length: {type: integer, example: 30}, coach: {type: string, example: 'John Doe'}, description: {type: string, example: 'A comprehensive plan for beginners.'}}}}}}}, '403': {description: 'Forbidden. You do not have the required permissions.'}}
     '/plans/{id}':
         get:
             summary: 'Retrieve a specific training plan by ID'
@@ -55,44 +55,66 @@ paths:
             tags: [Plans]
             parameters: [{name: id, in: path, required: true, description: 'ID of the training plan', schema: {type: integer}}]
             requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {title: {type: string, example: 'Beginner Workout Plan'}, length: {type: integer, example: 30}, coach: {type: string, example: 'John Doe'}, description: {type: string, example: 'A comprehensive plan for beginners.'}}}}}}
-            responses: {'200': {description: 'Plan updated successfully'}, '400': {description: 'All fields are required'}, '404': {description: 'Plan not found'}, '422': {description: 'Invalid input values'}}
+            responses: {'200': {description: 'Plan updated successfully'}, '400': {description: 'All fields are required'}, '403': {description: 'Forbidden. You do not have the required permissions to update this plan.'}, '404': {description: 'Plan not found'}, '422': {description: 'Invalid input values'}}
         delete:
             summary: 'Delete a specific training plan'
             tags: [Plans]
             parameters: [{name: id, in: path, required: true, description: 'ID of the training plan', schema: {type: integer}}]
-            responses: {'200': {description: 'Plan deleted successfully'}, '404': {description: 'Plan not found'}}
+            responses: {'200': {description: 'Plan deleted successfully'}, '403': {description: 'Access denied. You do not have permission to delete this plan.'}, '404': {description: 'Plan not found'}}
     '/plans/{plan_id}/workouts':
         get:
             summary: 'Retrieve all workouts for a specific plan'
             tags: [Plans]
             parameters: [{name: plan_id, in: path, required: true, description: 'ID of the training plan', schema: {type: integer}}]
-            responses: {'200': {description: 'A list of workouts for the specified plan', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}}, '404': {description: 'Plan not found'}}
+            responses: {'200': {description: 'A list of workouts for the specified plan', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}}, '403': {description: 'Access denied. Only users and admins can access this endpoint.'}, '404': {description: 'Plan not found'}}
+    /register:
+        post:
+            summary: 'Register a new user'
+            description: 'This endpoint allows a user to register by providing a username and password.'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {username: {type: string}, password: {type: string}}}}}}
+            responses: {'201': {description: 'User successfully registered', content: {application/json: {schema: {type: object, properties: {message: {type: string, example: 'User registered successfully.'}, token: {type: string, description: 'The JWT token for the authenticated user.'}}}}}}, '400': {description: 'Bad request (e.g., missing username or password)'}, '500': {description: 'Internal server error'}}
+    /login:
+        post:
+            summary: 'Login a user'
+            description: 'This endpoint allows a user to login using their username and password.'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {username: {type: string}, password: {type: string}}}}}}
+            responses: {'200': {description: 'Login successful', content: {application/json: {schema: {type: object, properties: {message: {type: string, example: 'Login successful.'}, token: {type: string, description: 'The JWT token for the authenticated user.'}}}}}}, '400': {description: 'Invalid username or password'}, '500': {description: 'Internal server error'}}
+    /renew:
+        post:
+            summary: 'Renew the access token'
+            description: 'This endpoint allows a user to renew their access token using a valid refresh token.'
+            tags: [Authentication]
+            requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {token: {type: string, description: 'The refresh token to be used for generating a new access token.'}}}}}}
+            responses: {'200': {description: 'Token successfully renewed', content: {application/json: {schema: {type: object, properties: {message: {type: string, example: 'Token renewed successfully.'}, token: {type: string, description: 'The newly generated JWT token.'}}}}}}, '400': {description: 'Missing or invalid token'}, '401': {description: 'Invalid or expired token'}}
     /workouts:
         get:
             summary: 'Retrieve a list of all workouts'
             tags: [Workouts]
-            responses: {'200': {description: 'A list of workouts', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}}}
+            security: [{BearerAuth: []}]
+            responses: {'200': {description: 'A list of workouts', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}}, '401': {description: 'Access denied. No token provided.'}, '403': {description: 'Access denied. You do not have the required permissions.'}}
         post:
             summary: 'Create a new workout for a specific training plan'
             tags: [Workouts]
             requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}, plan_id: {type: integer, example: 1}}}}}}
-            responses: {'201': {description: 'Workout created successfully', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}, '400': {description: 'All fields are required'}, '422': {description: 'Invalid input values'}}
+            responses: {'201': {description: 'Workout created successfully', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}, '400': {description: 'All fields are required'}, '403': {description: 'Access denied. You are not authorized to create a workout for this plan.'}, '422': {description: 'Invalid input values'}}
     '/workouts/{workout_id}':
         get:
             summary: 'Retrieve a specific workout by ID'
             tags: [Workouts]
             parameters: [{name: workout_id, in: path, required: true, description: 'ID of the workout', schema: {type: integer}}]
-            responses: {'200': {description: 'A workout found', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}, '404': {description: 'Workout not found'}}
+            responses: {'200': {description: 'A workout found', content: {application/json: {schema: {type: object, properties: {id: {type: integer, example: 1}, plan_id: {type: integer, example: 1}, name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}, '403': {description: 'Access denied. You are not authorized to view this workout.'}, '404': {description: 'Workout not found'}}
         put:
             summary: 'Update a specific workout'
             tags: [Workouts]
             parameters: [{name: workout_id, in: path, required: true, description: 'ID of the workout', schema: {type: integer}}]
             requestBody: {required: true, content: {application/json: {schema: {type: object, properties: {name: {type: string, example: 'Morning Cardio'}, length: {type: integer, example: 30}, type: {type: string, example: Cardio}, frequency: {type: integer, example: 3}}}}}}
-            responses: {'200': {description: 'Workout updated successfully'}, '400': {description: 'All fields are required'}, '404': {description: 'Workout not found'}, '422': {description: 'Invalid input values'}}
+            responses: {'200': {description: 'Workout updated successfully'}, '400': {description: 'All fields are required'}, '403': {description: 'Access denied. You do not have permission to update this workout.'}, '404': {description: 'Workout not found'}, '422': {description: 'Invalid input values'}}
         delete:
             summary: 'Delete a specific workout'
             tags: [Workouts]
             parameters: [{name: workout_id, in: path, required: true, description: 'ID of the workout', schema: {type: integer}}]
-            responses: {'200': {description: 'Workout deleted successfully'}, '404': {description: 'Workout not found'}}
+            responses: {'200': {description: 'Workout deleted successfully'}, '403': {description: 'Access denied. You do not have permission to delete this workout.'}, '404': {description: 'Workout not found'}}
 components: {}
 tags: []

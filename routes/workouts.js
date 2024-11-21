@@ -1,5 +1,6 @@
 const express = require('express');
 const mysql = require('mysql2');
+const authenticateToken = require('../middleware/authenticateToken');
 
 const router = express.Router({ mergeParams: true });  // Ensures plan_id is passed
 
@@ -17,6 +18,8 @@ const db = mysql.createConnection({
  *   get:
  *     summary: Retrieve a list of all workouts
  *     tags: [Workouts]
+ *     security:
+ *       - BearerAuth: []
  *     responses:
  *       200:
  *         description: A list of workouts
@@ -45,11 +48,18 @@ const db = mysql.createConnection({
  *                   frequency:
  *                     type: integer
  *                     example: 3
+ *       401:
+ *         description: Access denied. No token provided.
+ *       403:
+ *         description: Access denied. You do not have the required permissions.
  */
-router.get('/', (req, res) => {
+router.get('/workouts', authenticateToken, (req, res) => {
     const sql = 'SELECT * FROM workouts';
 
     db.query(sql, (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error retrieving workouts.' });
+        }
         res.json(results);
     });
 });
@@ -113,8 +123,10 @@ router.get('/', (req, res) => {
  *         description: All fields are required
  *       422:
  *         description: Invalid input values
+ *       403:
+ *         description: Access denied. You are not authorized to create a workout for this plan.
  */
-router.post('/', (req, res) => {
+router.post('/', authenticateToken, (req, res) => {
     const { name, length, type, frequency, plan_id } = req.body;
 
     // Check for missing fields
@@ -127,10 +139,41 @@ router.post('/', (req, res) => {
         return res.status(422).json({ error: 'Invalid payload. Length and frequency must be positive numbers.' });
     }
 
-    const sql = 'INSERT INTO workouts (plan_id, name, length, type, frequency) VALUES (?, ?, ?, ?, ?)';
+    // Check if the user has permission to create a workout for this plan
+    const sqlCheckPlanOwnership = 'SELECT user_id FROM plans WHERE id = ?';
     
-    db.query(sql, [plan_id, name, length, type, frequency], (err, result) => {
-        res.status(201).json({ id: result.insertId, plan_id, name, length, type, frequency });
+    db.query(sqlCheckPlanOwnership, [plan_id], (err, results) => {
+        if (err) {
+            return res.status(500).json({ error: 'Database error while checking plan ownership.' });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: 'Plan not found.' });
+        }
+
+        const planOwnerId = results[0].user_id;
+        
+        // Check if the user is the plan owner or is an admin
+        if (req.user.role !== 'admin' && req.user.id !== planOwnerId) {
+            return res.status(403).json({ error: 'Access denied. You are not authorized to create a workout for this plan.' });
+        }
+
+        const sql = 'INSERT INTO workouts (plan_id, name, length, type, frequency) VALUES (?, ?, ?, ?, ?)';
+        
+        db.query(sql, [plan_id, name, length, type, frequency], (err, result) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error creating workout.' });
+            }
+
+            return res.status(201).json({
+                id: result.insertId,
+                plan_id,
+                name,
+                length,
+                type,
+                frequency
+            });
+        });
     });
 });
 
@@ -177,16 +220,31 @@ router.post('/', (req, res) => {
  *                   example: 3
  *       404:
  *         description: Workout not found
+ *       403:
+ *         description: Access denied. You are not authorized to view this workout.
  */
-router.get('/:workout_id', (req, res) => {
+router.get('/:workout_id', authenticateToken, (req, res) => {
     const { workout_id } = req.params;
+
     const sql = 'SELECT * FROM workouts WHERE id = ?';
 
     db.query(sql, [workout_id], (err, results) => {
-        if (results.length === 0) {
-            return res.status(404).send('Workout not found');
+        if (err) {
+            return res.status(500).json({ message: 'Database error.', error: err });
         }
-        res.json(results[0]);
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Workout not found' });
+        }
+
+        const workout = results[0];
+
+        // Check if the user is an admin or the owner of the workout
+        if (req.user.role !== 'admin' && req.user.id !== workout.user_id) {
+            return res.status(403).json({ message: 'Access denied. You are not authorized to view this workout.' });
+        }
+
+        return res.status(200).json(workout);
     });
 });
 
@@ -232,8 +290,10 @@ router.get('/:workout_id', (req, res) => {
  *         description: Invalid input values
  *       404:
  *         description: Workout not found
+ *       403:
+ *         description: Access denied. You do not have permission to update this workout.
  */
-router.put('/:workout_id', (req, res) => {
+router.put('/:workout_id', authenticateToken, (req, res) => {
     const { workout_id } = req.params;
     const { name, length, type, frequency } = req.body;
 
@@ -242,18 +302,56 @@ router.put('/:workout_id', (req, res) => {
         return res.status(400).json({ error: 'Invalid payload. All fields are required.' });
     }
 
-    // Combined additional validation for length and frequency
+    // Additional validation for length and frequency
     if (isNaN(length) || length <= 0 || isNaN(frequency) || frequency <= 0) {
         return res.status(422).json({ error: 'Invalid payload. Length and frequency must be positive numbers.' });
     }
 
-    const sql = 'UPDATE workouts SET name = ?, length = ?, type = ?, frequency = ? WHERE id = ?';
-
-    db.query(sql, [name, length, type, frequency, workout_id], (err, result) => {
-        if (result.affectedRows === 0) {
-            return res.status(404).send('Workout not found');
+    // First, check if the workout exists
+    const sqlGetWorkout = 'SELECT * FROM workouts WHERE id = ?';
+    db.query(sqlGetWorkout, [workout_id], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error.', error: err });
         }
-        res.send('Workout updated successfully');
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Workout not found' });
+        }
+
+        const workout = results[0];
+
+        // Now, check if the plan exists and get its user_id
+        const sqlGetPlan = 'SELECT user_id FROM plans WHERE id = ?';
+        db.query(sqlGetPlan, [workout.plan_id], (err, planResults) => {
+            if (err) {
+                return res.status(500).json({ message: 'Database error.', error: err });
+            }
+
+            if (planResults.length === 0) {
+                return res.status(404).json({ message: 'Plan not found' });
+            }
+
+            const plan = planResults[0];
+
+            // Check if the user is an admin or the owner of the plan
+            if (req.user.role !== 'admin' && req.user.id !== plan.user_id) {
+                return res.status(403).json({ message: 'Access denied. You do not have permission to update this workout.' });
+            }
+
+            // Proceed to update the workout if authorized
+            const sqlUpdateWorkout = 'UPDATE workouts SET name = ?, length = ?, type = ?, frequency = ? WHERE id = ?';
+            db.query(sqlUpdateWorkout, [name, length, type, frequency, workout_id], (err, result) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Database error.', error: err });
+                }
+
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ message: 'Workout not found' });
+                }
+
+                return res.status(200).json({ message: 'Workout updated successfully' });
+            });
+        });
     });
 });
 
@@ -276,16 +374,57 @@ router.put('/:workout_id', (req, res) => {
  *         description: Workout deleted successfully
  *       404:
  *         description: Workout not found
+ *       403:
+ *         description: Access denied. You do not have permission to delete this workout.
  */
-router.delete('/:workout_id', (req, res) => {
+router.delete('/:workout_id', authenticateToken, (req, res) => {
     const { workout_id } = req.params;
-    const sql = 'DELETE FROM workouts WHERE id = ?';
 
-    db.query(sql, [workout_id], (err, result) => {
-        if (result.affectedRows === 0) {
-            return res.status(404).send('Workout not found');
+    // Check if the workout exists
+    const sqlGetWorkout = 'SELECT * FROM workouts WHERE id = ?';
+    db.query(sqlGetWorkout, [workout_id], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error.', error: err });
         }
-        res.send('Workout deleted successfully');
+
+        if (results.length === 0) {
+            return res.status(404).json({ message: 'Workout not found' });
+        }
+
+        const workout = results[0];
+
+        // Now, check if the plan exists and get its user_id
+        const sqlGetPlan = 'SELECT user_id FROM plans WHERE id = ?';
+        db.query(sqlGetPlan, [workout.plan_id], (err, planResults) => {
+            if (err) {
+                return res.status(500).json({ message: 'Database error.', error: err });
+            }
+
+            if (planResults.length === 0) {
+                return res.status(404).json({ message: 'Plan not found' });
+            }
+
+            const plan = planResults[0];
+
+            // Check if the user is an admin or the owner of the plan
+            if (req.user.role !== 'admin' && req.user.id !== plan.user_id) {
+                return res.status(403).json({ message: 'Access denied. You do not have permission to delete this workout.' });
+            }
+
+            // Proceed to delete the workout if authorized
+            const sqlDeleteWorkout = 'DELETE FROM workouts WHERE id = ?';
+            db.query(sqlDeleteWorkout, [workout_id], (err, result) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Database error.', error: err });
+                }
+
+                if (result.affectedRows === 0) {
+                    return res.status(404).json({ message: 'Workout not found' });
+                }
+
+                return res.status(200).json({ message: 'Workout deleted successfully' });
+            });
+        });
     });
 });
 
