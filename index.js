@@ -8,7 +8,7 @@ const fs = require('fs'); // Import fs for file operations
 
 // Create an Express application
 const app = express();
-const port = 3010;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 require('dotenv').config();
@@ -86,6 +86,6 @@ app.get('/', (req, res) => {
 });
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
