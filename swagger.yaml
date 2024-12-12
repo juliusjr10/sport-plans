@@ -5,7 +5,7 @@ info:
     description: 'API documentation for plans, workouts, and exercises.'
 servers:
     -
-        url: 'http://localhost:3010'
+        url: 'http://localhost:3000'
 paths:
     /exercises:
         post:
@@ -116,5 +116,11 @@ paths:
             tags: [Workouts]
             parameters: [{name: workout_id, in: path, required: true, description: 'ID of the workout', schema: {type: integer}}]
             responses: {'200': {description: 'Workout deleted successfully'}, '403': {description: 'Access denied. You do not have permission to delete this workout.'}, '404': {description: 'Workout not found'}}
+    '/workouts/{workout_id}/exercises':
+        get:
+            summary: 'Retrieve a list of all exercises for a specific workout'
+            tags: [Exercises]
+            parameters: [{name: workout_id, in: path, required: true, description: 'ID of the workout to get exercises for', schema: {type: integer}}]
+            responses: {'200': {description: 'A list of exercises for the specified workout', content: {application/json: {schema: {type: array, items: {type: object, properties: {id: {type: integer, example: 1}, workout_id: {type: integer, example: 1}, name: {type: string, example: Push-up}, sets: {type: integer, example: 3}, reps: {type: integer, example: 15}}}}}}}, '403': {description: 'Access denied. You are not authorized to view these exercises.'}, '404': {description: 'No exercises found for the specified workout'}}
 components: {}
 tags: []

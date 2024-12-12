@@ -1,0 +1,136 @@
+/* Navbar.css */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #004aad; /* Sports blue for background */
+  position: relative; /* Ensure proper layering */
+  z-index: 1000; /* Keep navbar on top */
+}
+
+nav .title {
+  font-size: 20px; /* Slightly larger text for the title */
+  color: white;
+  text-decoration: none;
+}
+
+nav ul {
+  list-style: none; /* Remove bullets */
+  display: flex; /* Horizontal layout */
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  margin-left: 20px; /* Space between menu items */
+}
+
+nav ul li a {
+  color: rgb(14, 0, 0); /* Text color for links */
+  text-decoration: none; /* Remove underline */
+  font-size: 16px; /* Standard font size for links */
+}
+
+nav ul li a:hover {
+  color: #080000; /* Slightly lighter text on hover */
+}
+
+button {
+  margin: 0;
+  padding: 2px;
+  border: solid 1px !important;
+  background: none;
+  font-size: 130%;
+  font-family: inherit;
+  font-weight: inherit;
+  color: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  line-height: 1 !important;
+  display: inline-block !important;
+  box-sizing: border-box !important;
+}
+
+nav ul li button {
+  background: #f44336;
+  padding: 8px 16px !important;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  color: white;
+  margin: 0 !important;
+  display: inline-block;
+  line-height: 1 !important;
+  box-sizing: border-box !important;
+}
+
+nav ul li button:hover {
+  background: #d32f2f; /* Slightly darker red on hover */
+}
+
+@media (max-width: 768px) {
+  nav ul {
+    display: none; /* Hide menu by default on small screens */
+    flex-direction: column; /* Vertical layout for dropdown */
+    width: 100%;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background-color: #004aad; /* Same background as navbar */
+    z-index: 1001; /* Ensure dropdown is above other content */
+  }
+
+  nav ul.open {
+    display: flex; /* Show menu when open */
+  }
+
+  nav ul li {
+    margin: 10px 0; /* Space between items in dropdown */
+    text-align: center; /* Center-align items */
+  }
+
+  nav .menu {
+    display: flex; /* Display burger menu on small screens */
+    flex-direction: column;
+    cursor: pointer;
+  }
+
+  nav .menu span {
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 4px 0;
+  }
+}
+
+/* Log In/Register button styles */
+.auth-btn {
+  background-color: #007bff;  /* Blue background */
+  color: white;  /* White text */
+  border: none;  /* No border */
+  padding: 10px 20px;  /* Padding */
+  font-size: 16px;  /* Font size */
+  cursor: pointer;  /* Pointer cursor on hover */
+  border-radius: 5px;  /* Rounded corners */
+  text-decoration: none;  /* Remove underline for NavLink */
+  text-align: center;  /* Center text */
+}
+
+.auth-btn:hover {
+  background-color: #0056b3;  /* Darker blue on hover */
+}
+
+.auth-btn:focus {
+  outline: none;  /* Remove focus outline */
+}
+
+/* Log Out button styles */
+.logout-btn {
+  background-color: #dc3545;  /* Red background for Log Out */
+}
+
+.logout-btn:hover {
+  background-color: #c82333;  /* Darker red on hover */
+}

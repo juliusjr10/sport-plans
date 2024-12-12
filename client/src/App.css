@@ -1,0 +1,157 @@
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+h1 {
+  text-align: left;
+  color: #333;
+  margin-bottom: 380px; /* Adds space between the heading and form */
+}
+/* Login Page Styles */
+h2 {
+  text-align: center;
+  color: #333;
+}
+
+form {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+  max-width: 400px;
+  width: 100%;
+  border: 2px solid #007BFF !important; /* Set border thickness and color */
+}
+
+
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #333;
+}
+
+input {
+  width: 95%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4CAF50;
+  border: 2px solid #000000; /* 2px border with black color */
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+
+button:hover {
+  background-color: #45a049;
+}
+
+.error {
+  color: #ff0000;
+  font-size: 14px;
+  margin-top: -10px;
+}
+
+.success {
+  color: #28a745;
+  font-size: 14px;
+  margin-top: -10px;
+}
+
+/* Plans Page Styles */
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+li {
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+h3 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+/* CSS for fade transition */
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-out;
+}
+
+/* Optional: Adjust button appearance when submitting */
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+.search-icon {
+  margin-left: 8px; /* Adjust spacing from the text */
+  color: #555; /* Icon color */
+  cursor: pointer; /* Change cursor to pointer for interactivity */
+  transition: color 0.2s ease;
+}
+
+.search-icon:hover {
+  color: #007BFF; /* Change color on hover */
+}
+nav ul li button:hover {
+  background: #d32f2f; /* Slightly darker red on hover */
+}
+/* Styles for the button only */
+.login-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  width: 101%;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
+}
+.register-button {
+  background-color: #007bff; /* Same color as .login-button */
+  color: white; /* Text color */
+  padding: 10px 20px; /* Same padding */
+  border-radius: 5px; /* Rounded corners */
+  border: none; /* No border */
+  font-size: 16px; /* Same font size */
+  cursor: pointer; /* Pointer cursor on hover */
+  width: 101%; /* Same width */
+}

@@ -5,14 +5,18 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs'); // Import yamljs
 const fs = require('fs'); // Import fs for file operations
-
+const cors = require('cors');
 // Create an Express application
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 require('dotenv').config();
-
+app.use(cors({
+    origin: 'http://localhost:3001',  // Allow requests from React app running on port 3001
+    methods: 'GET,POST,PUT,DELETE',  // Allow specific HTTP methods if needed
+    allowedHeaders: 'Content-Type, Authorization',  // Allow specific headers
+  }));
 // MySQL connection
 const db = mysql.createConnection({
     host: process.env.DB_HOST,
@@ -40,7 +44,7 @@ const swaggerOptions = {
         },
         servers: [
             {
-                url: `http://localhost:${port}`, // Adjust this for deployment
+                url: `http://localhost:${PORT}`, // Adjust this for deployment
             },
         ],
     },
@@ -84,7 +88,6 @@ app.use('/users', usersRoutes);
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
-
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);

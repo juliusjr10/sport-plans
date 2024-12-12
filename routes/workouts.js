@@ -239,11 +239,6 @@ router.get('/:workout_id', authenticateToken, (req, res) => {
 
         const workout = results[0];
 
-        // Check if the user is an admin or the owner of the workout
-        if (req.user.role !== 'admin' && req.user.id !== workout.user_id) {
-            return res.status(403).json({ message: 'Access denied. You are not authorized to view this workout.' });
-        }
-
         return res.status(200).json(workout);
     });
 });
@@ -425,6 +420,64 @@ router.delete('/:workout_id', authenticateToken, (req, res) => {
                 return res.status(200).json({ message: 'Workout deleted successfully' });
             });
         });
+    });
+});
+// Get all exercises for a specific workout
+/**
+ * @swagger
+ * /workouts/{workout_id}/exercises:
+ *   get:
+ *     summary: Retrieve a list of all exercises for a specific workout
+ *     tags: [Exercises]
+ *     parameters:
+ *       - name: workout_id
+ *         in: path
+ *         required: true
+ *         description: ID of the workout to get exercises for
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A list of exercises for the specified workout
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                     example: 1
+ *                   workout_id:
+ *                     type: integer
+ *                     example: 1
+ *                   name:
+ *                     type: string
+ *                     example: "Push-up"
+ *                   sets:
+ *                     type: integer
+ *                     example: 3
+ *                   reps:
+ *                     type: integer
+ *                     example: 15
+ *       404:
+ *         description: No exercises found for the specified workout
+ *       403:
+ *         description: Access denied. You are not authorized to view these exercises.
+ */
+router.get('/:workout_id/exercises', authenticateToken, (req, res) => {
+    const { workout_id } = req.params;
+
+    const sql = 'SELECT * FROM exercises WHERE workout_id = ?';
+
+    db.query(sql, [workout_id], (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error.', error: err });
+        }
+
+
+        return res.status(200).json(results);
     });
 });
 
