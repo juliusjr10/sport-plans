@@ -5,7 +5,7 @@ nav {
   align-items: center;
   padding: 10px 20px;
   background-color: #004aad; /* Sports blue for background */
-  position: relative; /* Ensure proper layering */
+  position: sticky; /* Ensure proper layering */
   z-index: 1000; /* Keep navbar on top */
 }
 
