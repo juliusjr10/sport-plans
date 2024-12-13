@@ -23,7 +23,7 @@ function AddPlanPage() {
   
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('https://sport-plans.onrender.com/plans', {
+      const response = await fetch('http://localhost:3000/plans', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

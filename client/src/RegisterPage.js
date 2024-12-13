@@ -28,7 +28,7 @@ function RegisterPage() {
 
     try {
       // Sending the registration request to your backend
-      const response = await fetch('https://sport-plans.onrender.com/users/register', {
+      const response = await fetch('http://localhost:3000/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

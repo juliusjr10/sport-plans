@@ -62,7 +62,7 @@ function ExercisesPage() {
   const fetchWorkoutTitle = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://sport-plans.onrender.com/workouts/${workout_id}`, {
+      const response = await fetch(`http://localhost:3000/workouts/${workout_id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -72,7 +72,7 @@ function ExercisesPage() {
         const data = await response.json();
         setWorkoutTitle(data.name); // Set the workout title
         // Fetch plan's user_id from workout's plan_id
-        const planResponse = await fetch(`https://sport-plans.onrender.com/plans/${data.plan_id}`, {
+        const planResponse = await fetch(`http://localhost:3000/plans/${data.plan_id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -100,7 +100,7 @@ function ExercisesPage() {
     const fetchExercises = async () => {
       try {
         const token = localStorage.getItem('authToken');
-        const response = await fetch(`https://sport-plans.onrender.com/workouts/${workout_id}/exercises`, {
+        const response = await fetch(`http://localhost:3000/workouts/${workout_id}/exercises`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -130,7 +130,7 @@ function ExercisesPage() {
   const handleDeleteExercise = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://sport-plans.onrender.com/exercises/${exerciseToDelete}`, {
+      const response = await fetch(`http://localhost:3000/exercises/${exerciseToDelete}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -182,7 +182,7 @@ function ExercisesPage() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://sport-plans.onrender.com/exercises/${exerciseToEdit}`, {
+      const response = await fetch(`http://localhost:3000/exercises/${exerciseToEdit}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -245,7 +245,7 @@ function ExercisesPage() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://sport-plans.onrender.com/exercises`, {
+      const response = await fetch(`http://localhost:3000/exercises`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

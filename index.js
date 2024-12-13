@@ -10,12 +10,19 @@ const cors = require('cors');
 
 // Create an Express application
 const app = express();
+const allowedOrigins = ['http://localhost:3001', 'https://sport-plans-frontend.onrender.com'];
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
 app.use(express.json());
 app.use(cors({
-    origin: 'https://sport-plans-frontend.onrender.com/',  // Allow requests from React app running on port 3001
+    origin: function(origin, callback) {
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+            callback(null, true); // Allow the request
+        } else {
+            callback(new Error('Not allowed by CORS')); // Reject the request
+        }
+    },
     methods: 'GET,POST,PUT,DELETE',  // Allow specific HTTP methods
     allowedHeaders: 'Content-Type, Authorization',  // Allow specific headers
 }));

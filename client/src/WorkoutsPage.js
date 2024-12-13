@@ -72,7 +72,7 @@ function WorkoutsPage() {
     const fetchPlanDetails = async () => {
       try {
         const token = localStorage.getItem('authToken'); 
-        const response = await fetch(`https://sport-plans.onrender.com/plans/${plan_id}`, {
+        const response = await fetch(`http://localhost:3000/plans/${plan_id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -92,7 +92,7 @@ function WorkoutsPage() {
     const fetchWorkouts = async () => {
       try {
         const token = localStorage.getItem('authToken');
-        const response = await fetch(`https://sport-plans.onrender.com/plans/${plan_id}/workouts`, {
+        const response = await fetch(`http://localhost:3000/plans/${plan_id}/workouts`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -116,7 +116,7 @@ function WorkoutsPage() {
   const handleDeleteWorkout = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://sport-plans.onrender.com/workouts/${workoutToDelete}`, {
+      const response = await fetch(`http://localhost:3000/workouts/${workoutToDelete}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -169,7 +169,7 @@ function WorkoutsPage() {
     setEditError(''); // Clear previous error
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://sport-plans.onrender.com/workouts/${workoutToEdit}`, {
+      const response = await fetch(`http://localhost:3000/workouts/${workoutToEdit}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -222,7 +222,7 @@ function WorkoutsPage() {
   
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`https://sport-plans.onrender.com/workouts`, {
+      const response = await fetch(`http://localhost:3000/workouts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
