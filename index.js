@@ -33,7 +33,8 @@ const db = mysql.createConnection({
     user: process.env.DB_USER,       // Username for your MySQL database
     password: process.env.DB_PASSWORD, // Password for the MySQL user
     database: process.env.DB_NAME,   // Database name to connect to
-    port: process.env.DB_PORT,       // MySQL default port (3306)
+    port: process.env.DB_PORT, 
+    connectTimeout: 10000      // MySQL default port (3306)
 });
 
 // Connecting to MySQL database
