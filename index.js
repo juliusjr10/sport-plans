@@ -1,30 +1,35 @@
 // index.js
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs'); // Import yamljs
-const fs = require('fs'); // Import fs for file operations
+const YAML = require('yamljs'); // Import yamljs for Swagger
+const fs = require('fs'); // File system module for file operations
 const cors = require('cors');
+
 // Create an Express application
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Middlewares
 app.use(express.json());
-require('dotenv').config();
 app.use(cors({
-    origin: 'http://localhost:3001',  // Allow requests from React app running on port 3001
-    methods: 'GET,POST,PUT,DELETE',  // Allow specific HTTP methods if needed
+    origin: 'https://sport-plans-frontend.onrender.com/',  // Allow requests from React app running on port 3001
+    methods: 'GET,POST,PUT,DELETE',  // Allow specific HTTP methods
     allowedHeaders: 'Content-Type, Authorization',  // Allow specific headers
-  }));
-// MySQL connection
+}));
+
+// MySQL connection setup using environment variables
 const db = mysql.createConnection({
-    host: process.env.DB_HOST,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+    host: process.env.DB_HOST,       // Public IP address of the Google Cloud SQL instance
+    user: process.env.DB_USER,       // Username for your MySQL database
+    password: process.env.DB_PASSWORD, // Password for the MySQL user
+    database: process.env.DB_NAME,   // Database name to connect to
+    port: process.env.DB_PORT,       // MySQL default port (3306)
 });
 
+// Connecting to MySQL database
 db.connect((err) => {
     if (err) {
         console.error('Error connecting to the database:', err);
@@ -33,7 +38,7 @@ db.connect((err) => {
     console.log('Connected to the MySQL database');
 });
 
-// Swagger definition
+// Swagger API Documentation Setup
 const swaggerOptions = {
     swaggerDefinition: {
         openapi: '3.0.0',
@@ -51,10 +56,10 @@ const swaggerOptions = {
     apis: ['./routes/*.js'], // Path to the API docs
 };
 
-// Initialize swagger-jsdoc
+// Initialize Swagger
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
-// Serve swagger documentation
+// Serve Swagger documentation
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Serve YAML documentation
@@ -74,21 +79,24 @@ const generateSwaggerYaml = () => {
 // Call the function to generate the YAML file on server start
 generateSwaggerYaml();
 
-// Import routes
+// Import routes for your API
 const plansRoutes = require('./routes/plans'); 
 const workoutsRoutes = require('./routes/workouts');  
 const exercisesRoutes = require('./routes/exercises');
 const usersRoutes = require('./routes/users');
+
 // Use routes
 app.use('/plans', plansRoutes);
 app.use('/workouts', workoutsRoutes);
 app.use('/exercises', exercisesRoutes);
 app.use('/users', usersRoutes);
 
+// Simple test route to check if the server is running
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
+
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-  });
+});

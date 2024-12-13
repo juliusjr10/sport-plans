@@ -68,7 +68,7 @@ function PlansPage() {
     const fetchPlans = async () => {
       try {
         const token = localStorage.getItem('authToken');
-        const response = await fetch('http://localhost:3000/plans', {
+        const response = await fetch('https://sport-plans.onrender.com/plans', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -103,7 +103,7 @@ function PlansPage() {
   const handleDeletePlan = async () => {
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`http://localhost:3000/plans/${planToDelete}`, {
+      const response = await fetch(`https://sport-plans.onrender.com/plans/${planToDelete}`, {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`,
@@ -156,7 +156,7 @@ function PlansPage() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch(`http://localhost:3000/plans/${planToEdit}`, {
+      const response = await fetch(`https://sport-plans.onrender.com/plans/${planToEdit}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -204,7 +204,7 @@ function PlansPage() {
     e.preventDefault();
     try {
       const token = localStorage.getItem('authToken');
-      const response = await fetch('http://localhost:3000/plans', {
+      const response = await fetch('https://sport-plans.onrender.com/plans', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

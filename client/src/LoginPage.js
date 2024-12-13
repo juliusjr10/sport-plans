@@ -28,7 +28,7 @@ function LoginPage() {
       setError('');
       try {
         // Sending the login request to your backend
-        const response = await fetch('http://localhost:3000/users/login', {
+        const response = await fetch('https://sport-plans.onrender.com/users/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
