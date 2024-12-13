@@ -278,7 +278,7 @@ function PlansPage() {
       </li>
     ))
   ) : (
-    <p className="no-plans">No plans available.</p>
+    <p className="no-plans"></p>
   )}
   <li className="plan-item add-plan-item" onClick={handleAddPlanClick}>
     <CiSquarePlus className="add-plan-icon" title="Add New Plan" />
