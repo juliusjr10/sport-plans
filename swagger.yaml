@@ -5,7 +5,7 @@ info:
     description: 'API documentation for plans, workouts, and exercises.'
 servers:
     -
-        url: 'http://localhost:3000'
+        url: 'https://sport-plans.onrender.com'
 paths:
     /exercises:
         post:
