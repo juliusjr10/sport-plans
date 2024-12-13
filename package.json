@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
     "bcrypt": "^5.1.1",
     "concurrently": "^7.0.0",
     "cors": "^2.8.5",
@@ -19,10 +20,12 @@
     "mysql2": "^3.11.3",
     "react": "^18.0.0",
     "react-dom": "^18.3.1",
+    "rimraf": "^6.0.1",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "nodemon": "^3.1.7",
     "swagger-jsdoc": "^6.2.8"
   }
